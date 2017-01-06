@@ -1,0 +1,53 @@
+ body
+ {
+    color:red;
+ }
+.bordo
+{
+   background-color: #1fc8db;
+}
+.bialy
+{
+  color: white;
+}
+.no-margin-padding-bottom
+{
+  margin-bottom: 0;
+  padding-bottom: 0;
+} 
+.selection-padding
+{
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+.heading
+{
+  text-transform: none;
+}
+.podkreslone
+{
+  box-shadow: 0 2px 3px rgba(17, 17, 17, 0.1);
+}
+.no-hover:hover
+{
+  cursor: default;
+}
+.wiekszy_padding
+{
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+.input_menu
+{
+  width: 50px;
+}
+.nounderline
+{
+  text-decoration: none;
+}
+.wysrodkowany {
+position: relative;
+margin: auto;
+width: 100%;
+text-align: center;
+/*handles the horizontal centering*/ }
