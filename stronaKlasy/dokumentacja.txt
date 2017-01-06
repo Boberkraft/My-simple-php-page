@@ -1,0 +1,265 @@
+<?php 
+//escapuje stringi
+function escape($string)
+
+// zwraca configuracje
+Config::get('mysql/host'); //127.0.0.1
+
+// zworc userów
+$users = DB:getInstance()->get('users, ['username', '=', 'alex']');
+
+//badz
+DB::getInstance()->query('SELECT username FROM users WHERE username = ? OR username = ?', [
+	'alex',
+	'billy']);
+
+//badz
+$users = DB:getInstance()->query('SELECT username FROM users');
+if($users->count())
+{
+	foreach($users->$user)
+	{
+		echo $user->username;
+	}
+}
+
+//sprawdznie rorra
+$user = DB::getInstance()->query('SELECT username FROM users WHERE username = ?',['alex']);
+
+if ($user->error()){
+	echo 'nouser';
+} else {
+	echo 'user';
+}
+
+//wyciaganie
+$users = DB::getInstance()->get('users', ['1', '=', '1']);
+
+if (!$users->count()){
+	echo 'nouser';
+} else {
+	foreach ($users->results() as $user) 
+	{
+		echo $user->username.'<br>';
+	}
+}
+
+//wyciaganie pierwszy
+echo $users->first()->username;
+
+//insert
+$users = DB::getInstance()->insert('users',[
+	'username' => 'Mistrz',
+	'password' => 'mikilol',
+	'salt' => 'salt'
+	]);
+if($users)
+{
+	echo '<br><br>Succes';
+}
+
+// update
+$users = DB::getInstance()->update('users', 1, [
+	'password' => 'gejuszek',
+	'name' => 'Karol'
+	]);
+
+// inputy
+if(Input::exists('get' /* bądź nic lub post*/))
+{
+	echo 'submited<Br>';
+	echo Input::get('username');
+}
+//validation
+$validate = new Validate();
+	$validation = $validate->check($_POST,[
+		'username' => [
+			'required' => true;
+			'min' => 2,
+			'max' => 20,
+			'unique' => 'users'
+		],
+		'password' => [
+			'required' => true;
+			'min' => 6,
+			'max' => 20
+			],
+		'password_again' => [
+			'required' => true,
+			'matches' => 'password',
+		],
+		'name' => [
+			'reuqired' => true,
+			'min' => 2,
+			'max' = 50
+			]
+		]);
+	
+if($validation->passed())
+	{
+		echo 'git';
+	}
+	else
+	{
+		foreach($validation->errors() as $error)
+		{
+			echo $error.'<br>';
+		}
+		
+	}
+//
+Token::check(Input::get('token'))
+
+//sesja
+Session::flash('success', "You registere succesfully!"); //dodanie tymczasowego
+
+// oczytanie i usuniecie
+if(Session::exists('success'))
+{
+	echo Session::flash('success'); //wyswietlenie i usuniecie
+}
+
+//user
+try 
+			{
+				$user->create([
+						'username' => Input::get('username'),
+						'password' => Hash::make(Input::get('password'), $salt),
+						'salt' => $salt,
+						'name' => Input::get('name'),
+						'joined' => date('Y-m-d H:i:s'),
+						'group' => 1
+					]);
+				Session::
+			} 
+			catch (Exception $e) 
+			{
+				die($e->getMessage());	
+			}
+
+//redirect
+Redirect::to('index.php');
+
+//salt 
+$salt = Hash::salt(32);
+
+//logowanie
+$user = new User()
+			$login = $user->login(Input::get('username'), Input::get('password'));
+
+			if($login)
+			{
+				echo 'Success';
+			}
+//user
+$user = new User();
+echo $user->data()->username;
+
+//update
+<?php 
+require_once 'core/init.php';
+
+$user = new User();
+
+if (!$user->isLoggedIn()) 
+{
+	Redirect::to('index.php');
+}
+
+if (Input::exists()) 
+{
+	if (Token::check(Input::get('token'))) 
+	{
+		$validate = new Validate();
+		$validation = $validate->check($_POST,[
+			'name' => [
+			'required' => true,
+			'min' => 2,
+			'max' => 50
+			]
+			]);
+		if ($validation->passed())
+		{
+			try
+			{
+				$user->update([
+					'name' => Input::get('name')
+					]);
+
+				Session::flash('home', 'Your details have benn upadate.d');
+				Redirect::to('index.php');
+			}
+			catch(Exception $e)
+			{
+				die($e->getMessage());
+			}
+		}
+		else
+		{
+			foreach ($validation->errors() as $error) 
+			{
+				echo $error.'<br>';
+			}
+		}
+
+	}	
+}
+
+//permisje
+if($user->hasPermission('admin'))
+	{
+		echo '<p>You are are admin</p>'
+	}
+
+?>
+
+
+
+
+<form id="myForm" action="edytuj.php" method="post">
+    <br>
+         <div class="card is-fullwidth">
+        
+          <footer id="footer" class="card-footer">
+            <a onclick="document.getElementById(\'myForm\').submit();" class="card-footer-item">Zapisz</a>
+           
+            
+          </footer>
+        </div>
+
+    <p><span class="tag is-primary">Tytul</span><span id="form_tytul" class="tag"><input class="input is-primary is-small" type="text" name="tytul" id="tytul" value="{$form_tytul}" autocomplete="off"></span></p>  
+    <p><span class="tag is-primary">Krótki tytuł</span><span id="form_tytul" class="tag"><input class="input is-primary is-small" type="text" name="krotki_tytul" id="krotki_tytul" value="$form_krotki_tytul" autocomplete="off"></span></p> 
+    <p><span class="tag is-primary">Slug</span><span id="form_tytul" class="tag"><input class="input is-primary is-small" type="text" name="slug" id="slug" value="{$form_slug}" autocomplete="off"></span></p>  
+	<p><span class="tag is-primary">Treść</span>
+
+	<textarea name="tresc" id="editor1" rows="10" cols="80"></textarea>
+	<input type="hidden" name="id" value="{$form_id}" id="id" autocomplete="off">
+	<input type="hidden" name="token" value="{$form_token}"><button type="submit">Wstaw</button>
+</form>
+
+
+<div class="control is-horizontal">
+  <div class="control-label">
+   	<span class="tag is-primary">Tytul</span><span id="form_tytul" class="tag">
+  </div>
+  <div class="control is-grouped">
+    <p class="control is-expanded">
+      <input class="input is-primary is-small" type="text" name="tytul" id="tytul" value="{$form_tytul}" autocomplete="off"></span>
+    </p>
+  </div>
+</div>
+
+
+function Strzałka w dół
+{
+UPDATE wpisy SET numer=numer+1 WHERE id = {$id};
+
+UPDATE wpisy SET numer=numer-1 WHERE id = {$id+1};
+}
+
+function Strzałka w górę
+{
+UPDATE wpisy SET numer=numer-1 WHERE id = {$id};
+
+UPDATE wpisy SET numer=numer+1 WHERE id = {$id-1};
+}
