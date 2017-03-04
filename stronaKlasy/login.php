@@ -10,20 +10,6 @@ if(Input::exists())
 
 	if (Token::check(Input::get('token'))) 
 	{
-    // $curl = curl_init();
-    // //die(Input::get('g-recaptcha-response'));
-
-    // curl_setopt_array($curl, [
-    //   CURLOPT_RETURNTRANSFER => 1,
-    //   CURLOPT_URL => 'https://www.google.com/recaptcha/api/siteverify',
-    //   CURLOPT_POST => 1,
-    //   CURLOPT_POSTFIELDS => [
-    //     'secret' => Config::get('recaptcha/secret'),
-    //     'response' => Input::get('g-recaptcha-response')
-    //   ],
-    // ]);
-
-    // $response = json_decode(curl_exec($curl));
     
 		$validate = new Validate();
 		$validation = $validate->check($_POST,[
